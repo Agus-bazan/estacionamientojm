@@ -1,0 +1,587 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Estaciona JM</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            color: #333;
+        }
+
+        .contenedor {
+            max-width: 450px;
+            margin: 0 auto;
+            padding: 20px;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .encabezado {
+            text-align: center;
+            margin-bottom: 30px;
+            padding: 20px 0;
+        }
+
+        h1 {
+            color: white;
+            font-size: 2.5rem;
+            font-weight: 700;
+            text-shadow: 0 2px 4px rgba(0,0,0,0.3);
+            margin-bottom: 10px;
+        }
+
+        .subtitulo {
+            color: rgba(255,255,255,0.9);
+            font-size: 1rem;
+            font-weight: 300;
+        }
+
+        .tarjeta {
+            background: white;
+            border-radius: 20px;
+            padding: 30px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+            margin-bottom: 20px;
+        }
+
+        .oculto {
+            display: none !important;
+        }
+
+        .grupo-formulario {
+            margin-bottom: 20px;
+        }
+
+        label {
+            display: block;
+            font-weight: 600;
+            margin-bottom: 8px;
+            color: #555;
+        }
+
+        input, select {
+            width: 100%;
+            padding: 15px;
+            border: 2px solid #e1e5e9;
+            border-radius: 12px;
+            font-size: 16px;
+            transition: all 0.3s ease;
+            background: #f8f9fa;
+        }
+
+        input:focus, select:focus {
+            outline: none;
+            border-color: #667eea;
+            background: white;
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+        }
+
+        .boton {
+            width: 100%;
+            padding: 18px;
+            border: none;
+            border-radius: 12px;
+            font-size: 18px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .boton-primario {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+        }
+
+        .boton-primario:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(102, 126, 234, 0.3);
+        }
+
+        .boton-exito {
+            background: linear-gradient(135deg, #56ab2f 0%, #a8e6cf 100%);
+            color: white;
+            margin-bottom: 10px;
+        }
+
+        .boton-peligro {
+            background: linear-gradient(135deg, #ff416c 0%, #ff4b2b 100%);
+            color: white;
+        }
+
+        .boton-secundario {
+            background: #6c757d;
+            color: white;
+            font-size: 14px;
+            padding: 12px;
+            margin-top: 15px;
+        }
+
+        .panel-sesion {
+            text-align: center;
+            padding: 20px;
+            background: linear-gradient(135deg, #a8e6cf 0%, #dcedc1 100%);
+            border-radius: 15px;
+            margin-bottom: 20px;
+        }
+
+        .contador {
+            font-size: 3rem;
+            font-weight: 700;
+            color: #2d5016;
+            margin: 20px 0;
+            text-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+
+        .info-sesion {
+            background: rgba(255,255,255,0.7);
+            padding: 15px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+        }
+
+        .info-sesion p {
+            margin: 5px 0;
+            font-weight: 500;
+        }
+
+        .resultado-verificacion {
+            padding: 20px;
+            border-radius: 12px;
+            margin-top: 20px;
+            text-align: center;
+            font-weight: 600;
+        }
+
+        .valida {
+            background: linear-gradient(135deg, #a8e6cf 0%, #dcedc1 100%);
+            color: #2d5016;
+        }
+
+        .invalida {
+            background: linear-gradient(135deg, #ffb3ba 0%, #ffdfba 100%);
+            color: #8b0000;
+        }
+
+        .cambiar-vista {
+            text-align: center;
+            margin-top: 20px;
+        }
+
+        .enlace-cambio {
+            color: white;
+            text-decoration: none;
+            font-weight: 500;
+            padding: 10px 20px;
+            background: rgba(255,255,255,0.2);
+            border-radius: 25px;
+            transition: all 0.3s ease;
+        }
+
+        .enlace-cambio:hover {
+            background: rgba(255,255,255,0.3);
+            transform: translateY(-1px);
+        }
+
+        .historial {
+            max-height: 300px;
+            overflow-y: auto;
+            margin-top: 15px;
+        }
+
+        .item-historial {
+            background: #f8f9fa;
+            padding: 12px;
+            border-radius: 8px;
+            margin-bottom: 8px;
+            border-left: 4px solid #667eea;
+        }
+
+        .pie-pagina {
+            text-align: center;
+            color: rgba(255,255,255,0.8);
+            font-size: 0.9rem;
+            margin-top: auto;
+            padding-top: 30px;
+        }
+
+        @media (max-width: 480px) {
+            .contenedor {
+                padding: 15px;
+            }
+            
+            h1 {
+                font-size: 2rem;
+            }
+            
+            .tarjeta {
+                padding: 20px;
+            }
+            
+            .contador {
+                font-size: 2.5rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="contenedor">
+        <header class="encabezado">
+            <h1>🚗 Estaciona JM</h1>
+            <p class="subtitulo">Estacionamiento Medido Simplificado</p>
+        </header>
+
+        <main>
+            <!-- Interfaz de Conductor -->
+            <section id="seccion-conductor">
+                <!-- Formulario de Inicio -->
+                <div id="formulario-estacionamiento" class="tarjeta">
+                    <h2 style="text-align: center; margin-bottom: 25px; color: #333;">Iniciar Estacionamiento</h2>
+                    
+                    <div class="grupo-formulario">
+                        <label for="patente">Patente del Vehículo</label>
+                        <input type="text" id="patente" placeholder="Ej: ABC123" style="text-transform: uppercase;" maxlength="7">
+                    </div>
+
+                    <div class="grupo-formulario">
+                        <label for="zona">Zona de Estacionamiento</label>
+                        <select id="zona">
+                            <option value="">Seleccionar zona...</option>
+                            <option value="Centro">Centro</option>
+                            <option value="Plaza">Plaza</option>
+                            <option value="Terminal">Terminal</option>
+                            <option value="Comercial">Comercial</option>
+                        </select>
+                    </div>
+
+                    <div class="grupo-formulario">
+                        <label for="tiempo">Tiempo de Estacionamiento</label>
+                        <select id="tiempo">
+                            <option value="">Seleccionar tiempo...</option>
+                            <option value="30">30 minutos</option>
+                            <option value="60">1 hora</option>
+                            <option value="120">2 horas</option>
+                            <option value="180">3 horas</option>
+                            <option value="240">4 horas</option>
+                        </select>
+                    </div>
+
+                    <button class="boton boton-primario" onclick="iniciarEstacionamiento()">
+                        🚗 Estacionar Ahora
+                    </button>
+
+                    <button class="boton boton-secundario" onclick="mostrarHistorial()">
+                        📋 Ver Historial
+                    </button>
+                </div>
+
+                <!-- Panel de Sesión Activa -->
+                <div id="panel-sesion" class="tarjeta oculto">
+                    <div class="panel-sesion">
+                        <h2 style="color: #2d5016; margin-bottom: 15px;">✅ Estacionamiento Activo</h2>
+                        
+                        <div class="info-sesion">
+                            <p><strong>Patente:</strong> <span id="patente-sesion"></span></p>
+                            <p><strong>Zona:</strong> <span id="zona-sesion"></span></p>
+                        </div>
+
+                        <div class="contador" id="contador">00:00</div>
+                        <p style="color: #2d5016; font-weight: 500;">Tiempo Restante</p>
+
+                        <button class="boton boton-exito" onclick="extenderTiempo()">
+                            ⏰ Extender 30 min
+                        </button>
+                        
+                        <button class="boton boton-peligro" onclick="finalizarEstacionamiento()">
+                            🛑 Finalizar
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Historial -->
+                <div id="panel-historial" class="tarjeta oculto">
+                    <h3 style="margin-bottom: 15px; color: #333;">📋 Historial de Estacionamientos</h3>
+                    <div id="lista-historial"></div>
+                    <button class="boton boton-secundario" onclick="ocultarHistorial()">Cerrar</button>
+                </div>
+            </section>
+
+            <!-- Interfaz de Inspector -->
+            <section id="seccion-inspector" class="oculto">
+                <div class="tarjeta">
+                    <h2 style="text-align: center; margin-bottom: 25px; color: #333;">🔍 Verificación de Inspector</h2>
+                    
+                    <div class="grupo-formulario">
+                        <label for="patente-verificar">Patente a Verificar</label>
+                        <input type="text" id="patente-verificar" placeholder="Ej: ABC123" style="text-transform: uppercase;" maxlength="7">
+                    </div>
+
+                    <button class="boton boton-primario" onclick="verificarPatente()">
+                        🔍 Verificar Patente
+                    </button>
+
+                    <div id="resultado-verificacion"></div>
+                </div>
+            </section>
+        </main>
+
+        <div class="cambiar-vista">
+            <a href="#" class="enlace-cambio" id="cambiar-a-inspector" onclick="cambiarAInspector()">
+                👮‍♂️ Soy Inspector
+            </a>
+            <a href="#" class="enlace-cambio oculto" id="cambiar-a-conductor" onclick="cambiarAConductor()">
+                🚗 Soy Conductor
+            </a>
+        </div>
+
+        <footer class="pie-pagina">
+            <p>&copy; 2025 Estaciona JM - Estacionamiento Medido Simplificado</p>
+        </footer>
+    </div>
+
+    <script>
+        let intervaloCuenta;
+        let sesionActual = null;
+        let historialSesiones = []; // Almacenamiento en memoria
+
+        // Cargar sesión activa al iniciar
+        window.onload = function() {
+            // En memoria, no hay sesión previa al cargar
+            console.log('Aplicación iniciada - Lista para usar');
+        }
+
+        function iniciarEstacionamiento() {
+            const patente = document.getElementById('patente').value.trim().toUpperCase();
+            const zona = document.getElementById('zona').value;
+            const tiempo = parseInt(document.getElementById('tiempo').value);
+
+            if (!patente || !zona || !tiempo) {
+                alert('Por favor, completa todos los campos');
+                return;
+            }
+
+            if (patente.length < 6) {
+                alert('La patente debe tener al menos 6 caracteres');
+                return;
+            }
+
+            const ahora = new Date().getTime();
+            sesionActual = {
+                patente: patente,
+                zona: zona,
+                tiempo: tiempo,
+                inicio: ahora,
+                finalizacion: ahora + (tiempo * 60 * 1000)
+            };
+
+            // Guardar en memoria en lugar de localStorage
+            mostrarPanelSesion();
+            iniciarContador();
+        }
+
+        function mostrarPanelSesion() {
+            document.getElementById('formulario-estacionamiento').classList.add('oculto');
+            document.getElementById('panel-sesion').classList.remove('oculto');
+            
+            document.getElementById('patente-sesion').textContent = sesionActual.patente;
+            document.getElementById('zona-sesion').textContent = sesionActual.zona;
+        }
+
+        function iniciarContador() {
+            if (intervaloCuenta) {
+                clearInterval(intervaloCuenta);
+            }
+
+            intervaloCuenta = setInterval(() => {
+                const ahora = new Date().getTime();
+                const tiempoRestante = sesionActual.finalizacion - ahora;
+
+                if (tiempoRestante <= 0) {
+                    document.getElementById('contador').textContent = '00:00';
+                    clearInterval(intervaloCuenta);
+                    
+                    // Auto-finalizar cuando expire
+                    setTimeout(() => {
+                        alert('⏰ Su tiempo de estacionamiento ha expirado');
+                        finalizarEstacionamiento();
+                    }, 1000);
+                    
+                    return;
+                }
+
+                const minutos = Math.floor(tiempoRestante / (1000 * 60));
+                const segundos = Math.floor((tiempoRestante % (1000 * 60)) / 1000);
+                
+                document.getElementById('contador').textContent = 
+                    `${minutos.toString().padStart(2, '0')}:${segundos.toString().padStart(2, '0')}`;
+            }, 1000);
+        }
+
+        function extenderTiempo() {
+            if (!sesionActual) return;
+
+            sesionActual.finalizacion += 30 * 60 * 1000; // 30 minutos más
+            // Ya no necesitamos localStorage - se mantiene en memoria
+            
+            // Mostrar feedback visual
+            const btn = event.target;
+            const textoOriginal = btn.textContent;
+            btn.textContent = '✅ Extendido!';
+            btn.style.background = '#28a745';
+            
+            setTimeout(() => {
+                btn.textContent = textoOriginal;
+                btn.style.background = '';
+            }, 2000);
+        }
+
+        function finalizarEstacionamiento() {
+            if (!sesionActual) return;
+
+            const tiempoUsado = Math.floor((new Date().getTime() - sesionActual.inicio) / (1000 * 60));
+            guardarEnHistorial(sesionActual, 'Finalizada', tiempoUsado);
+
+            // Limpiar sesión de memoria
+            sesionActual = null;
+            
+            if (intervaloCuenta) {
+                clearInterval(intervaloCuenta);
+            }
+
+            document.getElementById('panel-sesion').classList.add('oculto');
+            document.getElementById('formulario-estacionamiento').classList.remove('oculto');
+            
+            // Limpiar formulario
+            document.getElementById('patente').value = '';
+            document.getElementById('zona').value = '';
+            document.getElementById('tiempo').value = '';
+
+            alert('✅ Estacionamiento finalizado correctamente');
+        }
+
+        function guardarEnHistorial(sesion, estado, tiempoUsado = null) {
+            // Usar array en memoria en lugar de localStorage
+            const registro = {
+                ...sesion,
+                estado: estado,
+                tiempoUsado: tiempoUsado,
+                fechaFin: new Date().toLocaleString('es-AR')
+            };
+            
+            historialSesiones.unshift(registro);
+            
+            // Mantener solo los últimos 20 registros
+            if (historialSesiones.length > 20) {
+                historialSesiones = historialSesiones.slice(0, 20);
+            }
+        }
+
+        function mostrarHistorial() {
+            // Usar array en memoria en lugar de localStorage
+            const lista = document.getElementById('lista-historial');
+            
+            if (historialSesiones.length === 0) {
+                lista.innerHTML = '<p style="text-align: center; color: #666;">No hay registros en el historial</p>';
+            } else {
+                lista.innerHTML = historialSesiones.map(registro => `
+                    <div class="item-historial">
+                        <strong>${registro.patente}</strong> - ${registro.zona}<br>
+                        <small>${registro.fechaFin} | Estado: ${registro.estado}</small>
+                        ${registro.tiempoUsado ? `<br><small>Tiempo usado: ${registro.tiempoUsado} min</small>` : ''}
+                    </div>
+                `).join('');
+            }
+            
+            document.getElementById('panel-historial').classList.remove('oculto');
+        }
+
+        function ocultarHistorial() {
+            document.getElementById('panel-historial').classList.add('oculto');
+        }
+
+        // Funciones de Inspector
+        function verificarPatente() {
+            const patente = document.getElementById('patente-verificar').value.trim().toUpperCase();
+            
+            if (!patente) {
+                alert('Por favor, ingresa una patente');
+                return;
+            }
+
+            // Verificar en memoria en lugar de localStorage
+            const resultado = document.getElementById('resultado-verificacion');
+
+            if (sesionActual && sesionActual.patente === patente) {
+                const ahora = new Date().getTime();
+                const tiempoRestante = sesionActual.finalizacion - ahora;
+                
+                if (tiempoRestante > 0) {
+                    const minutos = Math.floor(tiempoRestante / (1000 * 60));
+                    resultado.innerHTML = `
+                        <div class="resultado-verificacion valida">
+                            ✅ <strong>VÁLIDA</strong><br>
+                            Patente: ${patente}<br>
+                            Zona: ${sesionActual.zona}<br>
+                            Tiempo Restante: ${minutos} minutos
+                        </div>
+                    `;
+                } else {
+                    resultado.innerHTML = `
+                        <div class="resultado-verificacion invalida">
+                            ⏰ <strong>VENCIDA</strong><br>
+                            Patente: ${patente}<br>
+                            El tiempo de estacionamiento ha expirado
+                        </div>
+                    `;
+                }
+            } else {
+                resultado.innerHTML = `
+                    <div class="resultado-verificacion invalida">
+                        ❌ <strong>NO REGISTRADA</strong><br>
+                        Patente: ${patente}<br>
+                        No hay estacionamiento activo
+                    </div>
+                `;
+            }
+        }
+
+        // Cambio de vistas
+        function cambiarAInspector() {
+            document.getElementById('seccion-conductor').classList.add('oculto');
+            document.getElementById('seccion-inspector').classList.remove('oculto');
+            document.getElementById('cambiar-a-inspector').classList.add('oculto');
+            document.getElementById('cambiar-a-conductor').classList.remove('oculto');
+            document.getElementById('patente-verificar').value = '';
+            document.getElementById('resultado-verificacion').innerHTML = '';
+        }
+
+        function cambiarAConductor() {
+            document.getElementById('seccion-inspector').classList.add('oculto');
+            document.getElementById('seccion-conductor').classList.remove('oculto');
+            document.getElementById('cambiar-a-conductor').classList.add('oculto');
+            document.getElementById('cambiar-a-inspector').classList.remove('oculto');
+        }
+
+        // Auto-mayúsculas para patentes
+        document.getElementById('patente').addEventListener('input', function(e) {
+            e.target.value = e.target.value.toUpperCase();
+        });
+
+        document.getElementById('patente-verificar').addEventListener('input', function(e) {
+            e.target.value = e.target.value.toUpperCase();
+        });
+    </script>
+</body>
+</html>
