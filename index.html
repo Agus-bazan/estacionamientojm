@@ -244,9 +244,7 @@
         </header>
 
         <main>
-            <!-- Interfaz de Conductor -->
             <section id="seccion-conductor">
-                <!-- Formulario de Inicio -->
                 <div id="formulario-estacionamiento" class="tarjeta">
                     <h2 style="text-align: center; margin-bottom: 25px; color: #333;">Iniciar Estacionamiento</h2>
                     
@@ -287,7 +285,6 @@
                     </button>
                 </div>
 
-                <!-- Panel de Sesión Activa -->
                 <div id="panel-sesion" class="tarjeta oculto">
                     <div class="panel-sesion">
                         <h2 style="color: #2d5016; margin-bottom: 15px;">✅ Estacionamiento Activo</h2>
@@ -310,7 +307,6 @@
                     </div>
                 </div>
 
-                <!-- Historial -->
                 <div id="panel-historial" class="tarjeta oculto">
                     <h3 style="margin-bottom: 15px; color: #333;">📋 Historial de Estacionamientos</h3>
                     <div id="lista-historial"></div>
@@ -318,7 +314,6 @@
                 </div>
             </section>
 
-            <!-- Interfaz de Inspector -->
             <section id="seccion-inspector" class="oculto">
                 <div class="tarjeta">
                     <h2 style="text-align: center; margin-bottom: 25px; color: #333;">🔍 Verificación de Inspector</h2>
@@ -354,13 +349,7 @@
     <script>
         let intervaloCuenta;
         let sesionActual = null;
-        let historialSesiones = []; // Almacenamiento en memoria
-
-        // Cargar sesión activa al iniciar
-        window.onload = function() {
-            // En memoria, no hay sesión previa al cargar
-            console.log('Aplicación iniciada - Lista para usar');
-        }
+        let historialSesiones = [];
 
         function iniciarEstacionamiento() {
             const patente = document.getElementById('patente').value.trim().toUpperCase();
@@ -386,7 +375,6 @@
                 finalizacion: ahora + (tiempo * 60 * 1000)
             };
 
-            // Guardar en memoria en lugar de localStorage
             mostrarPanelSesion();
             iniciarContador();
         }
@@ -412,7 +400,6 @@
                     document.getElementById('contador').textContent = '00:00';
                     clearInterval(intervaloCuenta);
                     
-                    // Auto-finalizar cuando expire
                     setTimeout(() => {
                         alert('⏰ Su tiempo de estacionamiento ha expirado');
                         finalizarEstacionamiento();
@@ -432,10 +419,8 @@
         function extenderTiempo() {
             if (!sesionActual) return;
 
-            sesionActual.finalizacion += 30 * 60 * 1000; // 30 minutos más
-            // Ya no necesitamos localStorage - se mantiene en memoria
+            sesionActual.finalizacion += 30 * 60 * 1000;
             
-            // Mostrar feedback visual
             const btn = event.target;
             const textoOriginal = btn.textContent;
             btn.textContent = '✅ Extendido!';
@@ -453,7 +438,6 @@
             const tiempoUsado = Math.floor((new Date().getTime() - sesionActual.inicio) / (1000 * 60));
             guardarEnHistorial(sesionActual, 'Finalizada', tiempoUsado);
 
-            // Limpiar sesión de memoria
             sesionActual = null;
             
             if (intervaloCuenta) {
@@ -463,7 +447,6 @@
             document.getElementById('panel-sesion').classList.add('oculto');
             document.getElementById('formulario-estacionamiento').classList.remove('oculto');
             
-            // Limpiar formulario
             document.getElementById('patente').value = '';
             document.getElementById('zona').value = '';
             document.getElementById('tiempo').value = '';
@@ -472,7 +455,6 @@
         }
 
         function guardarEnHistorial(sesion, estado, tiempoUsado = null) {
-            // Usar array en memoria en lugar de localStorage
             const registro = {
                 ...sesion,
                 estado: estado,
@@ -482,14 +464,12 @@
             
             historialSesiones.unshift(registro);
             
-            // Mantener solo los últimos 20 registros
             if (historialSesiones.length > 20) {
                 historialSesiones = historialSesiones.slice(0, 20);
             }
         }
 
         function mostrarHistorial() {
-            // Usar array en memoria en lugar de localStorage
             const lista = document.getElementById('lista-historial');
             
             if (historialSesiones.length === 0) {
@@ -511,7 +491,6 @@
             document.getElementById('panel-historial').classList.add('oculto');
         }
 
-        // Funciones de Inspector
         function verificarPatente() {
             const patente = document.getElementById('patente-verificar').value.trim().toUpperCase();
             
@@ -520,7 +499,6 @@
                 return;
             }
 
-            // Verificar en memoria en lugar de localStorage
             const resultado = document.getElementById('resultado-verificacion');
 
             if (sesionActual && sesionActual.patente === patente) {
@@ -557,7 +535,6 @@
             }
         }
 
-        // Cambio de vistas
         function cambiarAInspector() {
             document.getElementById('seccion-conductor').classList.add('oculto');
             document.getElementById('seccion-inspector').classList.remove('oculto');
@@ -574,7 +551,6 @@
             document.getElementById('cambiar-a-inspector').classList.remove('oculto');
         }
 
-        // Auto-mayúsculas para patentes
         document.getElementById('patente').addEventListener('input', function(e) {
             e.target.value = e.target.value.toUpperCase();
         });
